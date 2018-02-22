@@ -1,0 +1,9 @@
+*.swp
+*.o
+*.hi
+dist/
+TWM
+STFT
+*.db*
+.cabal-sandbox/
+cabal.sandbox.config
