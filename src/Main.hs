@@ -1,25 +1,25 @@
 module Main where
 
-import           Data.Aeson
+import qualified Data.Aeson           as AE
 import qualified Data.ByteString.Lazy as BSL
-import           Data.Char
-import qualified Data.Geohash         as GH
-import           ElasticMusic
+import qualified Data.Char            as Char
+import qualified ElasticMusic         as Mus
 import           Euterpea
-import           System.Random
+import qualified ParseLogs            as Logs
+import qualified System.Random        as Rand
 
 main :: IO ()
 main = do
   putStrLn "Enter a seed:"
   char <- getChar
-  if not $ isDigit char
+  if not $ Char.isDigit char
     then putStrLn " Come on just enter an Int man" >> main
     else do
       file <- BSL.readFile "src/out.json"
-      let result = eitherDecode file :: Either String [Buckets]
+      let result = AE.eitherDecode file :: Either String [Logs.Buckets]
       case result of
         Left err -> fail err
-        Right buckets -> play music where
-          seed = digitToInt char
-          randInts = randomRs (0,4) (mkStdGen seed)
-          music = genLine randInts (head buckets)
+        Right parsedJSON -> play music where
+          seed = Char.digitToInt char
+          randInts = Rand.randomRs (0,4) (Rand.mkStdGen seed)
+          music = Mus.genLine randInts (head parsedJSON)
